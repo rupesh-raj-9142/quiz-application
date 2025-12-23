@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz Application</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+</head>
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+    
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #052027, #d9e4f5);
+    min-height: 100vh;
+    padding-bottom: 80px; 
+}
+
+.basic {
+    background:yellow;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 6px rgba(15, 43, 46, 0.1);
+    border-radius: 3px solid;
+}
+
+.basic h1 {
+    font-size: 20px;
+    color: #333;
+}
+
+.basic input {
+    padding: 6px 10px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    width: 300px;
+}
+
+.basic a {
+    color: #555;
+    font-size: 18px;
+    text-decoration: none;
+}
+
+
+.parent {
+    background: #ffffff;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    text-align: center;
+
+}
+
+.parent h2 {
+    font-size: 18px;
+    color: #222;
+    margin-bottom: 15px;
+}
+
+.parent p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+.parent button {
+    width: auto;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #007bff;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.parent button:hover {
+    background: yellow;
+    color: rgb(68, 171, 194);
+}
+
+.dad {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    display: flex;
+    justify-content: space-around;
+    padding: 12px 0;
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.15);
+    background-color: cadetblue;
+}
+
+.dad a {
+    color: #555;
+    font-size: 20px;
+    text-decoration: none;
+    
+}
+
+.dad a:hover {
+    color: #007bff;
+    
+}
+</style>
+
+<body>
+    <div class="basic">
+        <h1>QuizWallah</h1>
+
+
+        <input type="text" placeholder="Search quiz">
+
+
+        <a href="#">
+            <i class="fa-solid fa-user"></i>
+        </a>
+    </div>
+
+    <div class="parent">
+        <h2>TEST YOUR KNOWLEDGE WITH QUIZZES</h2>
+
+        <p>
+            You are the winner, congratulations!  
+            This quiz helps you test your knowledge and improve your skills.
+            Keep practicing and learning new things every day.
+        </p>
+        <button>Start Quiz</button>
+        <button>Result</button>
+        <button>Refresh</button>
+    </div>
+
+    <div class="dad">
+        <a href="#">
+            <i class="fa-solid fa-house"></i>
+        </a>
+
+        <a href="#">
+            <i class="fa-solid fa-square-poll-horizontal"></i>
+        </a>
+
+        <a href="#">
+            <i class="fa-solid fa-power-off"></i>
+        </a>
+
+        <a href="#">
+            <i class="fa-solid fa-right-to-bracket"></i>
+        </a>
+    </div>
+<script>
+const quizData = [
+  {
+    question: "Which language runs in a browser?",
+    options: ["Python", "Java", "C++", "JavaScript"],
+    correct: 3
+  },
+  {
+    question: "HTML stands for?",
+    options: [
+      "Hyper Text Markup Language",
+      "High Text Machine Language",
+      "Hyper Tool Markup Language",
+      "None"
+    ],
+    correct: 0
+  },
+  {
+    question: "CSS is used for?",
+    options: ["Logic", "Database", "Styling", "Server"],
+    correct: 2
+  }
+
+  
+];
+let currentIndex = 0;
+let score = 0;
+let quizStarted = false;
+
+const questionEl = document.querySelector(".parent h2");
+const paraEl = document.querySelector(".parent p");
+const buttons = document.querySelectorAll(".parent button");
+
+const homeBtn = buttons[0];  
+const resultBtn = buttons[1];  
+const restartBtn = buttons[2]; 
+const refreshBtn = buttons[3];
+
+function showInterface() {
+  questionEl.innerText = "TEST YOUR KNOWLEDGE WITH QUIZZES";
+  paraEl.innerHTML = `
+    <p>Welcome to the Quiz Application.</p>
+    <p>Click <b>Home</b> to start the quiz.</p>
+  `;
+}
+
+showInterface();
+
+function loadQuestion() {
+  const q = quizData[currentIndex];
+  questionEl.innerText = q.question;
+
+  paraEl.innerHTML = `
+    <label><input type="radio" name="ans" value="0"> ${q.options[0]}</label><br><br>
+    <label><input type="radio" name="ans" value="1"> ${q.options[1]}</label><br><br>
+    <label><input type="radio" name="ans" value="2"> ${q.options[2]}</label><br><br>
+    <label><input type="radio" name="ans" value="3"> ${q.options[3]}</label>
+  `;
+}
+
+function getAnswer() {
+  const answers = document.querySelectorAll('input[name="ans"]');
+  for (let a of answers) {
+    if (a.checked) return parseInt(a.value);
+  }
+  return null;
+}
+
+homeBtn.onclick = function () {
+
+  if (!quizStarted) {
+    quizStarted = true;
+    currentIndex = 0;
+    score = 0;
+    loadQuestion();
+    homeBtn.innerText = "Next";
+    return;
+  }
+
+  const selected = getAnswer();
+  if (selected === null) {
+    alert("Please select an option");
+    return;
+  }
+
+  if (selected === quizData[currentIndex].correct) {
+    score++;
+  }
+
+  currentIndex++;
+
+
+  if (currentIndex < quizData.length) {
+    loadQuestion();
+  } else {
+    questionEl.innerText = "Quiz Completed 🎉";
+    paraEl.innerHTML = `
+      <p>You have completed the quiz.</p>
+      <h3>Your Score: ${score} / ${quizData.length}</h3>
+    `;
+    homeBtn.innerText = "Home";
+    quizStarted = false;
+  }
+};
+resultBtn.onclick = function () {
+  questionEl.innerText = "Result";
+  paraEl.innerHTML = `
+    <h3>Your Score: ${score} / ${quizData.length}</h3>
+  `;
+};
+restartBtn.onclick = function () {
+  currentIndex = 0;
+  score = 0;
+  quizStarted = false;
+  homeBtn.innerText = "Home";
+  showInterface();
+};
+refreshBtn.onclick = function () {
+  location.reload();
+};
+</script>
+</body>
+</html>
